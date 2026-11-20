@@ -5,6 +5,7 @@ import java.awt.Image;
 import controlador.Crud;
 import java.sql.Date;
 import javax.swing.JOptionPane;
+import modelo.Usuario;
 
 public class Registro_Usuarios extends javax.swing.JFrame {
 
@@ -192,11 +193,13 @@ public class Registro_Usuarios extends javax.swing.JFrame {
         }
 
         try {
+            
             long telefono = Long.parseLong(telTexto);
             Date fechaNac = Date.valueOf(fechaTexto);
 
+            Usuario nuevo = new Usuario(nombre, telefono, fechaNac);   // ← se crea el objeto
             Crud operaciones = new Crud();
-            operaciones.insertar(nombre, telefono, fechaNac);
+            operaciones.insertar(nuevo);  
 
             txtNombre.setText("");
             txtTelefono.setText("");

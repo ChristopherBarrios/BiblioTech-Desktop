@@ -15,6 +15,8 @@ public class Conexion {
             Class.forName("org.postgresql.Driver");
             enlace = DriverManager.getConnection(ruta, "postgres", "admin");
         } catch (ClassNotFoundException | SQLException error) {
+            
+            
             JOptionPane.showMessageDialog(null, "Error al conectar con PostgreSQL:\n" + error.getMessage());
         }
     }
