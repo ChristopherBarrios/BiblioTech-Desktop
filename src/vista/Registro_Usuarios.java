@@ -48,9 +48,9 @@ public class Registro_Usuarios extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        PanelBase.setBackground(new java.awt.Color(204, 255, 255));
+        PanelBase.setBackground(new java.awt.Color(0, 0, 102));
 
-        jPanel1.setBackground(new java.awt.Color(102, 255, 204));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 204));
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setText("Nombre completo usuario");
@@ -131,6 +131,7 @@ public class Registro_Usuarios extends javax.swing.JFrame {
         );
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Registrar usuario");
 
         javax.swing.GroupLayout PanelBaseLayout = new javax.swing.GroupLayout(PanelBase);
