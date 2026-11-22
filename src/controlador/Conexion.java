@@ -7,13 +7,13 @@ import javax.swing.JOptionPane;
 
 public class Conexion {
 
-    private Connection enlace = null;
+    private Connection enlace;
 
     public Conexion() {
         String ruta = "jdbc:postgresql://localhost:5432/db_libreria";
         try {
             Class.forName("org.postgresql.Driver");
-            enlace = DriverManager.getConnection(ruta, "postgres", "admin");
+            enlace = DriverManager.getConnection(ruta, "postgres", "root");
         } catch (ClassNotFoundException | SQLException error) {
             
             
