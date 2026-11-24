@@ -33,6 +33,7 @@ public class Gestion_Prestamos extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         mniConsulta = new javax.swing.JMenuItem();
+        mniMultas = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -178,6 +179,14 @@ public class Gestion_Prestamos extends javax.swing.JFrame {
         });
         jMenu1.add(mniConsulta);
 
+        mniMultas.setText("Multas");
+        mniMultas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniMultasActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mniMultas);
+
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
@@ -263,6 +272,12 @@ public class Gestion_Prestamos extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPrestamosActionPerformed
 
+    private void mniMultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniMultasActionPerformed
+        Consulta_Multas cm = new Consulta_Multas();
+cm.setVisible(true);
+cm.mostrar();
+    }//GEN-LAST:event_mniMultasActionPerformed
+
 
     
     public static void main(String args[]) {
@@ -312,6 +327,7 @@ public class Gestion_Prestamos extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JMenuItem mniConsulta;
+    private javax.swing.JMenuItem mniMultas;
     private javax.swing.JTextField txtLibro;
     private javax.swing.JTextField txtPrestamos;
     private javax.swing.JTextField txtUsuario;

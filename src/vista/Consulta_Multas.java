@@ -1,35 +1,26 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
 package vista;
 import controlador.Crud_Multas;
 import modelo.ClaseMulta;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 import java.time.temporal.ChronoUnit;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import vista.Registro_Multas;
 
 public class Consulta_Multas extends javax.swing.JFrame {
         // ===================== MODULO DE MULTAS (pegar dentro de la clase Consulta_Multas) =====================
@@ -37,16 +28,19 @@ public class Consulta_Multas extends javax.swing.JFrame {
     // Posicion de cada columna en la tabla
     private static final int COL_ID = 0;
     private static final int COL_NOMBRE = 1;
-    private static final int COL_TELEFONO = 2;
+    private static final int COL_MONTO = 7;
+ 
+    private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
  
     private final Crud_Multas crud = new Crud_Multas();
     private final DefaultTableModel estructura = new DefaultTableModel(new Object[]{
-        "ID", "Nombre", "Telefono", "Libro", "Fecha de registro", "Fecha devolucion", "Multa"
+        "ID multa", "Usuario", "Telefono", "Libro", "Fecha de prestamo",
+        "Fecha devolucion", "Dias de retraso", "Multa ($)"
     }, 0) {
         @Override
         public boolean isCellEditable(int fila, int columna) {
-            // Como antes: se editan los datos de la persona y luego se pulsa Modificar
-            return columna == COL_NOMBRE || columna == COL_TELEFONO;
+            // Solo se edita el monto de la multa; luego se pulsa Modificar
+            return columna == COL_MONTO;
         }
     };
     private final JTable tblConsulta = new JTable(estructura);
@@ -55,11 +49,11 @@ public class Consulta_Multas extends javax.swing.JFrame {
  
     /** Se llama desde el constructor, justo despues de initComponents(). */
     private void iniciar() {
-        setTitle("Registro De Multas");
+        setTitle("Multas");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
  
-        JLabel titulo = new JLabel("Registro De Multas", SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Multas", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setForeground(Color.WHITE);
         titulo.setOpaque(true);
@@ -68,52 +62,92 @@ public class Consulta_Multas extends javax.swing.JFrame {
  
         JPanel botones = new JPanel();
         botones.setBorder(new EmptyBorder(8, 0, 8, 0));
+        botones.add(btnModificar);
         botones.add(btnEliminar);
+        btnModificar.addActionListener(e -> modificar());
         btnEliminar.addActionListener(e -> eliminar());
  
         add(titulo, BorderLayout.NORTH);
         add(new JScrollPane(tblConsulta), BorderLayout.CENTER);
         add(botones, BorderLayout.SOUTH);
  
-        setSize(900, 420);
+        setSize(1000, 420);
         setLocationRelativeTo(null);
     }
  
-    /** Actualiza las multas (dias de retraso x $100) y llena la tabla. */
+    /**
+     * Genera las multas de los libros que no se devolvieron a tiempo
+     * (a partir de la tabla de prestamos) y muestra la tabla.
+     */
     public void mostrar() {
-        estructura.setRowCount(0);
         try {
-            crud.actualizarMultas();
-            java.util.List<ClaseMulta> lista = crud.revisar();
-            if (lista.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "NO hay registros");
-                return;
-            }
-            LocalDate hoy = LocalDate.now();
-            for (ClaseMulta m : lista) {
-                LocalDate prestamo = LocalDate.parse(m.getFecha_prestamo());
-                LocalDate devolucion = LocalDate.parse(m.getFecha_devolucion());
- 
-                String multa = "Sin multa";
-                if (hoy.isAfter(devolucion)) {
-                    long dias = ChronoUnit.DAYS.between(devolucion, hoy);
-                    multa = "$" + m.getMonto() + " (" + dias + " días)";
-                }
-                estructura.addRow(new Object[]{
-                    m.getId_pide(),
-                    m.getNombre(),
-                    m.getTel_cel(),
-                    m.getTitulo() == null ? "" : m.getTitulo(),
-                    prestamo.format(Registro_Multas.FORMATO),
-                    devolucion.format(Registro_Multas.FORMATO),
-                    multa
-                });
+            int nuevas = crud.generarMultasAutomaticas();
+            cargarTabla();
+            if (estructura.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "NO hay multas");
+            } else if (nuevas > 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Se generaron " + nuevas + " multa(s) nueva(s) por libros no devueltos a tiempo.");
             }
         } catch (SQLException ex) {
             System.out.println("ERROR" + ex);
             JOptionPane.showMessageDialog(this, "No se pudo consultar:\n" + ex.getMessage());
         }
     }
+ 
+    /** Llena la tabla con las multas que hay en la base. */
+    private void cargarTabla() throws SQLException {
+        estructura.setRowCount(0);
+        LocalDate hoy = LocalDate.now();
+        for (ClaseMulta m : crud.revisar()) {
+            LocalDate prestamo = LocalDate.parse(m.getFecha_prestamo());
+            LocalDate devolucion = LocalDate.parse(m.getFecha_devolucion());
+            long dias = Math.max(0, ChronoUnit.DAYS.between(devolucion, hoy));
+ 
+            estructura.addRow(new Object[]{
+                m.getId_multa(),
+                m.getNombre(),
+                m.getTel_cel(),
+                m.getTitulo() == null ? "" : m.getTitulo(),
+                prestamo.format(FORMATO),
+                devolucion.format(FORMATO),
+                dias,
+                m.getMonto()
+            });
+        }
+    }
+ 
+    private void modificar() {
+        if (tblConsulta.isEditing()) {
+            tblConsulta.getCellEditor().stopCellEditing();
+        }
+        int fila = tblConsulta.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un registro");
+            return;
+        }
+ 
+        String monto = String.valueOf(estructura.getValueAt(fila, COL_MONTO)).trim();
+        if (!monto.matches("[0-9]{1,9}")) {
+            JOptionPane.showMessageDialog(this, "El monto debe ser un número entero (solo dígitos)");
+            return;
+        }
+ 
+        ClaseMulta m = new ClaseMulta();
+        m.setId_multa(Integer.parseInt(String.valueOf(estructura.getValueAt(fila, COL_ID))));
+        m.setMonto(Integer.parseInt(monto));
+ 
+        try {
+            crud.modificar(m);
+            System.out.println("MODIFICADO");
+            JOptionPane.showMessageDialog(this, "REGISTRO MODIFICADO");
+            cargarTabla();
+        } catch (SQLException ex) {
+            System.out.println("ERROR" + ex);
+            JOptionPane.showMessageDialog(this, "ERROR,NO MODIFICADO\n" + ex.getMessage());
+        }
+    }
+ 
     private void eliminar() {
         int fila = tblConsulta.getSelectedRow();
         if (fila < 0) {
@@ -124,14 +158,16 @@ public class Consulta_Multas extends javax.swing.JFrame {
         String nombre = String.valueOf(estructura.getValueAt(fila, COL_NOMBRE));
  
         int opcion = JOptionPane.showConfirmDialog(this,
-                "¿Eliminar el registro de " + nombre + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
+                "¿Eliminar la multa de " + nombre + "?\n"
+                + "Si el libro sigue sin devolverse, la multa se generará de nuevo al abrir esta pantalla.",
+                "Confirmar", JOptionPane.YES_NO_OPTION);
         if (opcion != JOptionPane.YES_OPTION) {
             return;
         }
         try {
             crud.eliminar(id);
             JOptionPane.showMessageDialog(this, "REGISTRO ELIMINADO");
-            mostrar();
+            cargarTabla();
         } catch (SQLException ex) {
             System.out.println("ERROR" + ex);
             JOptionPane.showMessageDialog(this, "ERROR\n" + ex.getMessage());
@@ -141,11 +177,11 @@ public class Consulta_Multas extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Consulta_Multas.class.getName());
 
     /**
-     * Creates new form Consulta
+     * Creates new form Consultas_Multas
      */
     public Consulta_Multas() {
         initComponents();
-        iniciar();
+         iniciar();
     }
 
     /**
