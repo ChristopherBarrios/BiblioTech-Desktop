@@ -1,32 +1,37 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
 /**
- * Un registro del módulo de multas.
- * Junta datos de las tablas pide (préstamo), usuario, libro y multa.
- * Las fechas se guardan como texto yyyy-MM-dd, igual que en tu versión original.
+ * Una multa (tabla multa) con los datos de su préstamo (pide),
+ * su usuario y su libro, para mostrarla en la tabla.
+ * Las fechas se guardan como texto yyyy-MM-dd.
  */
 public class ClaseMulta {
 
-    // pide / multa
+    // multa
+    private int Id_multa;
     private int Id_pide;
-    private int Id_usuario;
-    private int Id_libro;
-    private String Fecha_prestamo;
-    private String Fecha_devolucion;
     private int Monto;
 
     // usuario
     private String Nombre;
     private String Tel_cel;
 
-    // libro (solo para mostrar)
+    // libro
     private String Titulo;
 
+    // pide (préstamo)
+    private String Fecha_prestamo;
+    private String Fecha_devolucion;
+
     public ClaseMulta() {
+    }
+
+    public int getId_multa() {
+        return Id_multa;
+    }
+
+    public void setId_multa(int Id_multa) {
+        this.Id_multa = Id_multa;
     }
 
     public int getId_pide() {
@@ -37,20 +42,12 @@ public class ClaseMulta {
         this.Id_pide = Id_pide;
     }
 
-    public int getId_usuario() {
-        return Id_usuario;
+    public int getMonto() {
+        return Monto;
     }
 
-    public void setId_usuario(int Id_usuario) {
-        this.Id_usuario = Id_usuario;
-    }
-
-    public int getId_libro() {
-        return Id_libro;
-    }
-
-    public void setId_libro(int Id_libro) {
-        this.Id_libro = Id_libro;
+    public void setMonto(int Monto) {
+        this.Monto = Monto;
     }
 
     public String getNombre() {
@@ -91,13 +88,5 @@ public class ClaseMulta {
 
     public void setFecha_devolucion(String Fecha_devolucion) {
         this.Fecha_devolucion = Fecha_devolucion;
-    }
-
-    public int getMonto() {
-        return Monto;
-    }
-
-    public void setMonto(int Monto) {
-        this.Monto = Monto;
     }
 }
