@@ -30,7 +30,7 @@ public class Consulta_Prestamo extends javax.swing.JFrame {
         btnModifi = new javax.swing.JButton();
         btnElim = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 102));
 

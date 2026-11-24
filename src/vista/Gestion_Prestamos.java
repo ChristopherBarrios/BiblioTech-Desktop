@@ -35,7 +35,7 @@ public class Gestion_Prestamos extends javax.swing.JFrame {
         mniConsulta = new javax.swing.JMenuItem();
         mniMultas = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 102));
         jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {

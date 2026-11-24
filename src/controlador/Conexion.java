@@ -13,7 +13,7 @@ public class Conexion {
         String ruta = "jdbc:postgresql://localhost:5432/db_libreria";
         try {
             Class.forName("org.postgresql.Driver");
-            enlace = DriverManager.getConnection(ruta, "postgres", "root");
+            enlace = DriverManager.getConnection(ruta, "postgres", "admin");
         } catch (ClassNotFoundException | SQLException error) {
             
             
