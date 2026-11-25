@@ -14,6 +14,7 @@ public class Consulta_Usuarios extends javax.swing.JFrame {
      */
     public Consulta_Usuarios() {
         initComponents();
+        Iconos.poner(this);
         setLocationRelativeTo(null);
         cargarTabla();
     }

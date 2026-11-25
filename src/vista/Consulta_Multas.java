@@ -181,6 +181,7 @@ public class Consulta_Multas extends javax.swing.JFrame {
      */
     public Consulta_Multas() {
         initComponents();
+        Iconos.poner(this);
          iniciar();
     }
 

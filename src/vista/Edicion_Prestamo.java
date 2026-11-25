@@ -19,6 +19,7 @@ public class Edicion_Prestamo extends javax.swing.JFrame {
      */
     public Edicion_Prestamo() {
         initComponents();
+        Iconos.poner(this);
     }
       public Edicion_Prestamo(ClasePrestamos objClase) {
         initComponents();

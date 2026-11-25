@@ -1,7 +1,4 @@
 package vista;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import java.awt.Image;
 import controlador.Crud;
 import java.sql.Date;
 import javax.swing.JOptionPane;
@@ -14,12 +11,7 @@ public class Registro_Usuarios extends javax.swing.JFrame {
      */
     public Registro_Usuarios() {
         initComponents();
-        //Cargar imagen a ventana
-        Icon logo = new ImageIcon(new ImageIcon(getClass().getResource("/img/UserIcono.png")).getImage().getScaledInstance(lblLogo.getWidth(), lblLogo.getHeight(), 0));
-        lblLogo.setIcon(logo);
-        //icono pestaña
-        Image icono = new ImageIcon(getClass().getResource("/img/Logo_libreria.png")).getImage();
-        setIconImage(icono);
+        Iconos.poner(this);
         setLocationRelativeTo(null);
        
     }

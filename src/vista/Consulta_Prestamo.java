@@ -14,6 +14,7 @@ public class Consulta_Prestamo extends javax.swing.JFrame {
     
     public Consulta_Prestamo() {
         initComponents();
+        Iconos.poner(this);
         btnElim.addActionListener(evt -> eliminar());
         cargarTabla();
     }

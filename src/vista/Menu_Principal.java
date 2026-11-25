@@ -12,23 +12,20 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-/**
- * Menu principal (index) de la libreria.
- * Cada modulo es una "tarjeta" con sus botones. Para agregar un modulo nuevo
- * (o activar Libros) solo se agrega/edita una linea en el constructor.
- */
+
 public class Menu_Principal extends JFrame {
 
     private static final Color AZUL = new Color(0, 0, 102);
     private static final Color CREMA = new Color(255, 255, 204);
 
     public Menu_Principal() {
+        Iconos.poner(this);
         setTitle("Libreria - Menu principal");
         setDefaultCloseOperation(EXIT_ON_CLOSE); // cerrar el menu cierra todo el programa
         getContentPane().setLayout(new BorderLayout());
         getContentPane().setBackground(AZUL);
 
-        // ---------- Titulo ----------
+
         JLabel titulo = new JLabel("Sistema de Libreria", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 30));
         titulo.setForeground(Color.WHITE);
@@ -46,8 +43,8 @@ public class Menu_Principal extends JFrame {
 
 
         centro.add(modulo("Libros",
-                boton("Registrar libro", () -> enConstruccion("Libros")),
-                boton("Consultar libros", () -> enConstruccion("Libros"))));
+                boton("Registrar libro", () -> abrir(new Registro_Libros())),
+                boton("Consultar libros", () -> abrir(new Consulta_Libros()))));
 
         centro.add(modulo("Prestamos",
                 boton("Registrar / devolver", () -> abrir(new Gestion_Prestamos())),
